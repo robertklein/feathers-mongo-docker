@@ -1,0 +1,32 @@
+version: '3'
+services:
+  api:
+    build: ./api
+    restart: always
+    volumes:
+      - ./api/src:/home/node/api/src
+    ports:
+      - "9030:3030"
+    depends_on:
+      - mongo
+    links:
+      - mongo:mongo    
+    networks:
+      - mongo_net
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=task
+    volumes:
+      - ./db:/data/db
+    ports:
+      - "27017:27017"    
+    networks:
+      - mongo_net
+  # redis:
+  #   image: "redis:alpine"
+networks:
+  mongo_net:
+    driver: bridge
